@@ -8,6 +8,7 @@
  let express = require('express');
  let swig = require("swig");
  let mime = require('mime');
+ let mongoose = require('mongoose');
  //创建app应用 => NodeJs HTTP.createServer();
  var app = express();
 
@@ -58,7 +59,16 @@ app.use('/api',require(path.join(__dirname , './routers/api')));
 
 
  //监听http请求
- app.listen(8081);
+ mongoose.connect('mongodb://localhost:27010',function(err){
+   if(err){
+    console.log('数据库链接失败');
+   }
+   else{
+    console.log('数据库链接成功');
+    app.listen(8081);
+   }
+ });
+
 
  //http://localhost:8081/
 
