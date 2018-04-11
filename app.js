@@ -8,7 +8,11 @@
  let express = require('express');
  let swig = require("swig");
  let mime = require('mime');
+ //处理数据库
  let mongoose = require('mongoose');
+ //加载body-parser，用来处理post提交过来打的数据,并配置
+ var bodyParser = require('body-parser');
+
  //创建app应用 => NodeJs HTTP.createServer();
  var app = express();
 
@@ -29,6 +33,13 @@ app.use(express.static(path.join(__dirname, './public')));
  app.set("view engine",'html')
 //为了避免开发过程中，模板从缓存中读取，需要取消模板缓存
 swig.setDefaults({cache:false})
+
+/**
+ * bodyparser配置 
+ * post请求可以获取req.body，表单提交的内容
+ * */
+app.use(bodyParser.urlencoded({extended:true}));
+
 
 
 /**
