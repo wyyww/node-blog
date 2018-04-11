@@ -1,0 +1,27 @@
+{
+  "name": "node-blog",
+  "version": "1.0.0",
+  "description": "基于node+mongodb+markdown的博客论坛",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyyww/node-blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wyyww/node-blog/issues"
+  },
+  "homepage": "https://github.com/wyyww/node-blog#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookies": "^0.7.1",
+    "express": "^4.16.3",
+    "markdown": "^0.5.0",
+    "mongoose": "^5.0.14",
+    "swig": "^1.4.2"
+  }
+}
