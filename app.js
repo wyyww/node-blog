@@ -19,7 +19,8 @@
  app.set("views","./views")
  //注册所使用的模板引擎,第一个参数必须是view engine,第二个参数和app.engine这个方法中定义的模板引擎的名称（第一个参数）一致的
  app.set("view engine",'html')
-
+//为了避免开发过程中，模板从缓存中读取，需要取消模板缓存
+swig.setDefaults({cache:false})
 
  /**
   * 首页
@@ -33,6 +34,8 @@
     /**
      * 读取view目录下的指定文件，解析并返回给客户端
      * 第一个参数，表示模板的文件，相对于views目录，views/index.html
+     * 
+     * 第一次读取的时候会将读取的文件保存到内存中，因此第二次请求的时候会直接从内存中拿数据，则修改的模板不会返回到客户端； 性能提升
      */
     res.render('index');
     
