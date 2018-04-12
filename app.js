@@ -44,7 +44,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 /**
  * 根据不同的功能划分模块（首页可移到这里面了）
- * 
  */
 app.use('/',require(path.join(__dirname ,'./routers/main')));
 app.use('/admin',require(path.join(__dirname ,'./routers/admin')));
@@ -70,7 +69,7 @@ app.use('/api',require(path.join(__dirname , './routers/api')));
 
 
  //监听http请求
- mongoose.connect('mongodb://localhost:27010',function(err){
+ mongoose.connect('mongodb://localhost:27010/blog',function(err){
    if(err){
     console.log('数据库链接失败');
    }
