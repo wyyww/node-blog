@@ -30,7 +30,7 @@ router.post('/user/register', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
     var repassword = req.body.repassword;
-    console.log(req.body);
+    // console.log(req.body);
 
     if (username === '') {
         responseData.code = 1;
@@ -76,4 +76,39 @@ router.post('/user/register', function (req, res, next) {
 })
 
 
+//登录验证
+router.post('/user/login', function (req, res, next) {
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    if (username === '' || password === '') {
+        responseData.code = 1;
+        responseData.message = '用户名和密码不能为空';
+        res.json(responseData);
+        return;
+    }
+
+    //用户名登录,查询数据库中相同用户名和密码的记录是否存在，存在就成功
+    User.findOne({
+        username: username,
+        password:password
+    }).then((userInfo) => {
+        if (!userInfo) {
+            //表示数据库中不存在数据
+            responseData.code = 2;
+            responseData.message = '用户名或密码错误';
+            res.json(responseData);
+            return;
+        }
+
+        //用户名和密码都正确了
+        responseData.message = "登录成功"
+        responseData.userInfo ={
+            _id:userInfo._id,
+            username:userInfo.uesrname,
+        }
+        res.json(responseData);
+        return;
+    })
+});
 module.exports = router;

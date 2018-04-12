@@ -4,9 +4,10 @@
 
 $(function() {
 
-    var $loginBox = $('#loginBox');
-    var $registerBox = $('#registerBox');
-    var $userInfo = $('#userInfo');
+    let $loginBox = $('#loginBox');
+    let $registerBox = $('#registerBox');
+    let $userInfo = $('#userInfo .rightBox');
+    
 
     //切换到注册面板
     $loginBox.find('a.colMint').on('click', function() {
@@ -62,8 +63,18 @@ $(function() {
 
                 $loginBox.find('.colWarning').html(result.message);
 
+                // if (!result.code) {
+                //     window.location.reload();
+                // }
+
                 if (!result.code) {
-                    window.location.reload();
+                    //登录成功
+                    setTimeout(function() {
+                        // $loginBox.hide();
+                        // $userInfo.show();
+
+                        //显示登录用户的信息
+                    }, 1000);
                 }
             }
         })
