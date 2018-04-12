@@ -105,10 +105,23 @@ router.post('/user/login', function (req, res, next) {
         responseData.message = "登录成功"
         responseData.userInfo ={
             _id:userInfo._id,
-            username:userInfo.uesrname,
+            username:userInfo.username,
         }
+        req.cookies.set('userInfo',JSON.stringify({
+            _id:userInfo._id,
+            username:userInfo.username
+        }));
         res.json(responseData);
         return;
     })
 });
+
+/**
+ * 退出
+ */
+router.get('/user/logout',function(req,res,next){
+    req.cookies.set('userInfo',null);
+    res.json(responseData);
+    return;
+})
 module.exports = router;

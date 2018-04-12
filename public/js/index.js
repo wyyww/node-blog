@@ -1,12 +1,10 @@
-/**
- * Created by 毅 on 2016/8/28.
- */
+
 
 $(function() {
 
-    let $loginBox = $('#loginBox');
-    let $registerBox = $('#registerBox');
-    let $userInfo = $('#userInfo .rightBox');
+    var $loginBox = $('#loginBox');
+    var $registerBox = $('#registerBox');
+    var $userInfo = $('#userInfo');
     
 
     //切换到注册面板
@@ -63,19 +61,18 @@ $(function() {
 
                 $loginBox.find('.colWarning').html(result.message);
 
+                //初始设置登录成功
                 // if (!result.code) {
-                //     window.location.reload();
+                //     //登录成功
+                //     setTimeout(function() {
+                //         $loginBox.hide();
+                //         $userInfo.show();
+                //     }, 1000);
                 // }
-
+                //完成设置之后，利用浏览器自动刷新即可
                 if (!result.code) {
-                    //登录成功
-                    setTimeout(function() {
-                        // $loginBox.hide();
-                        // $userInfo.show();
-
-                        //显示登录用户的信息
-                    }, 1000);
-                }
+                    window.location.reload();
+                }          
             }
         })
     })

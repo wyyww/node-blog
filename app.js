@@ -11,7 +11,9 @@
  //处理数据库
  let mongoose = require('mongoose');
  //加载body-parser，用来处理post提交过来打的数据,并配置
- var bodyParser = require('body-parser');
+ let bodyParser = require('body-parser');
+ //加载cookies模块
+ var Cookies = require('cookies');
 
  //创建app应用 => NodeJs HTTP.createServer();
  var app = express();
@@ -40,7 +42,24 @@ swig.setDefaults({cache:false})
  * */
 app.use(bodyParser.urlencoded({extended:true}));
 
+//cookies配置
+app.use(function(req,res,next){
+  req.cookies = new Cookies(req,res);
 
+  //解析登录用户的cookies
+  req.userInfo = {};
+  if(req.cookies.get("userInfo")){
+    try{
+      req.userInfo = JSON.parse(req.cookies.get("userInfo"));
+    }
+    catch(err){
+      console.log('解析失败')
+    }
+  }
+
+
+  next();
+})
 
 /**
  * 根据不同的功能划分模块（首页可移到这里面了）
