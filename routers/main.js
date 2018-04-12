@@ -8,6 +8,7 @@ var router = express.Router();
 
 //第二个参数可以将内容分配
 router.get('/',function(req,res,next){
+    console.log(req.userInfo);
     res.render("main/index",{
         userInfo:req.userInfo,
     });

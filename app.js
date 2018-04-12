@@ -13,10 +13,11 @@
  //加载body-parser，用来处理post提交过来打的数据,并配置
  let bodyParser = require('body-parser');
  //加载cookies模块
- var Cookies = require('cookies');
-
+ let Cookies = require('cookies');
+//引入用户模型
+let User = require('./models/User.js');
  //创建app应用 => NodeJs HTTP.createServer();
- var app = express();
+ let app = express();
 
 
 /**静态文件托管*/
@@ -51,9 +52,18 @@ app.use(function(req,res,next){
   if(req.cookies.get("userInfo")){
     try{
       req.userInfo = JSON.parse(req.cookies.get("userInfo"));
+
+      console.log(req.userInfo)
+      //吧管理员权限放在程序的入口位置，避免了后面处理都要判断权限的问题
+
+      //获取是否为管理员
+      User.findById(req.userInfo._id).then(function(userInfo){
+        req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
+        next();
+      })
     }
     catch(err){
-      console.log('解析失败')
+      next();
     }
   }
 
