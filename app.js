@@ -56,21 +56,17 @@ app.use(function(req,res,next){
      
       //把判断管理员权限放在程序的入口位置，避免了后面处理都要判断权限的问题
        //获取是否为管理员
-      // User.findById(req.userInfo._id)
-      // .then(function(userInfo){
-      //   req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
-      //   next();
-      // })
-      // .then(function(){
-      //   next();
-      // })
-      
+      User.findById(req.userInfo._id)
+      .then(function(userInfo){
+     
+       req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
+       // next();
+      })
     }
     catch(err){
       next();
     }
   }
-
   next();
 })
 
