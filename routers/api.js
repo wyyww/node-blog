@@ -103,11 +103,12 @@ router.post('/user/login', function (req, res, next) {
 
         //用户名和密码都正确了
         responseData.message = "登录成功"
-        responseData.userInfo ={
-            _id:userInfo._id,
-            username:userInfo.username,
-            isAdmin:userInfo.isAdmin
-        }
+        //这一部分不设置也没啥问题是不
+        // responseData.userInfo ={
+        //     _id:userInfo._id,
+        //     username:userInfo.username,
+        //     isAdmin:userInfo.isAdmin
+        // }
         req.cookies.set('userInfo',JSON.stringify({
             _id:userInfo._id,
             username:userInfo.username,

@@ -8,8 +8,8 @@ var router = express.Router();
 
 
 router.get('/',function(req,res,next){
-   console.log('sdfds')
-   next();
+    // res.send("shfkdjk");
+   res.render("admin/index")
 })
 
 module.exports = router;

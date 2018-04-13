@@ -60,7 +60,7 @@ app.use(function(req,res,next){
       .then(function(userInfo){
      
        req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
-       // next();
+       // next();多出这个就有问题了
       })
     }
     catch(err){
