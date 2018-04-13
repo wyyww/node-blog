@@ -15,7 +15,9 @@
  //加载cookies模块
  let Cookies = require('cookies');
 //引入用户模型
-let User = require('./models/User.js');
+let User = require('./models/User');
+//引入分类的模型
+let Category = require('./models/Category')
  //创建app应用 => NodeJs HTTP.createServer();
  let app = express();
 
