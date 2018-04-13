@@ -200,30 +200,30 @@ router.post('/category/edit', function (req, res, next) {
             }
         }
     })
-    .then(function(sameCategory){
-        //数据库当中已经有同名分类
-        if(sameCategory){
-            res.render('admin/error', {
-                userInfo: req.userInfo,
-                message: '数据库中存在同名分类',
-            })
-            return Promise.reject();
-        }
-        else{
-           return Category.update({
-                _id:_id
-            },{
-                name:name
-            })
-        }
-    })
-    .then(function(){
-        res.render('admin/success', {
-            userInfo: req.userInfo,
-            message: '修改成功',
-            url: '/admin/category'
+        .then(function (sameCategory) {
+            //数据库当中已经有同名分类
+            if (sameCategory) {
+                res.render('admin/error', {
+                    userInfo: req.userInfo,
+                    message: '数据库中存在同名分类',
+                })
+                return Promise.reject();
+            }
+            else {
+                return Category.update({
+                    _id: _id
+                }, {
+                        name: name
+                    })
+            }
         })
-    })
+        .then(function () {
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '修改成功',
+                url: '/admin/category'
+            })
+        })
 
 
 })
@@ -232,7 +232,17 @@ router.post('/category/edit', function (req, res, next) {
  * 分类删除
  */
 router.get('/category/delete', function (req, res, next) {
-
+    var _id = req.query.id || '';
+    //获取需要修改的分类信息
+    Category.remove({
+        _id: _id
+    }).then(function (category) {
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '删除成功',
+            url: '/admin/category'
+        })
+    })
 })
 
 module.exports = router;
