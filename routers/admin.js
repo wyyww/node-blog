@@ -245,4 +245,45 @@ router.get('/category/delete', function (req, res, next) {
     })
 })
 
+
+
+
+
+
+
+
+
+//内容管理部分
+/**
+ * 内容首页
+ */
+router.get('/content',function(req,res){
+    res.render('admin/content_index',{
+        userInfo:req.userInfo,
+    })
+})
+
+/**
+ * 内容添加页面
+ */
+router.get('/content/add',function(req,res){
+    Category.find().sort({_id:-1}).then(function(categories){
+        res.render('admin/content_add',{
+            userInfo:req.userInfo,
+            categories:categories,
+        })
+    })
+})
+/**
+ * 内容添加保存
+ */
+router.post('/content/add',function(req,res){
+    Category.find().sort({_id:-1}).then(function(categories){
+        res.render('admin/content_add',{
+            userInfo:req.userInfo,
+            categories:categories,
+        })
+    })
+})
+
 module.exports = router;
