@@ -72,7 +72,7 @@ router.get('/category', function (req, res, next) {
         page = Math.max(page, 1);
         var skip = (page - 1) * limit;
 
-        Category.find().limit(limit).skip(skip).then(function (categories) {
+        Category.find().sort({_id:-1}).limit(limit).skip(skip).then(function (categories) {
             res.render("admin/category_index", {
                 userInfo: req.userInfo,
                 categories: categories,
