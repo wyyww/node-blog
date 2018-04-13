@@ -59,62 +59,180 @@ router.get('/user', function (req, res, next) {
 /**
  * 分类首页
  */
-router.get('/category',function(req,res,next){
+router.get('/category', function (req, res, next) {
+    var page = Number(req.query.page || 1);
+    var limit = 2;
+    var pages = 0;
+    Category.count().then(function (count) {
+        //计算总页数
+        pages = Math.ceil(count / limit);
+        //page不能超过总页数 pages
+        page = Math.min(page, pages)
+        //取值不能小于1
+        page = Math.max(page, 1);
+        var skip = (page - 1) * limit;
 
-    res.render('admin/category_index',{
-        userInfo: req.userInfo
+        Category.find().limit(limit).skip(skip).then(function (categories) {
+            res.render("admin/category_index", {
+                userInfo: req.userInfo,
+                categories: categories,
+                page: page,
+                count: count,
+                limit: limit,
+                pages: pages,
+            })
+        })
     })
 })
-
 /**
  * 添加分类
  */
-router.get('/category/add',function(req,res,next){
-    res.render('admin/category_add',{
+router.get('/category/add', function (req, res, next) {
+    res.render('admin/category_add', {
         userInfo: req.userInfo
+    })
+})
+/**
+ * 分类添加的保存
+ */
+router.post('/category/add', function (req, res, next) {
+    //当提交数据不符合要求会跳转到错误页面，否则展示页面
+    var name = req.body.name || '';
+    if (name === '') {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '名称不能为空'
+        });
+        return;
+    }
+
+    //数据库中是否已经存在同名分类名称
+    Category.findOne({
+        name: name
+    })
+        .then(function (rs) {
+            if (rs) {
+                //数据库中已经存在该分类了
+                res.render('admin/error', {
+                    userInfo: req.userInfo,
+                    message: '分类已经存在'
+                })
+                return Promise.reject();//这一步Promise很经典啊
+            }
+            else {
+                return new Category({
+                    name: name,
+                }).save();
+            }
+        }).then(function (newCategory) {
+            //返回的promise，category
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '分类保存成功',
+                url: '/admin/category'
+            })
+        })
+})
+
+/**
+ * 修改分类
+ */
+router.get('/category/edit', function (req, res, next) {
+    //获取需要修改的分类的信息,并且用表单形式展现出来
+    var _id = req.query.id || '';
+    //获取需要修改的分类信息
+    Category.findOne({
+        _id: _id
+    }).then(function (category) {
+
+        if (!category) {
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '分类信息不存在',
+            })
+            return Promise.reject();
+        }
+        else {
+            res.render('admin/category_edit', {
+                userInfo: req.userInfo,
+                category: category,
+            })
+        }
     })
 })
 
 /**
- * 分类添加的保存
+ * 修改分类的保存
  */
-router.post('/category/add',function(req,res,next){
-    //当提交数据不符合要求会跳转到错误页面，否则展示页面
-   var name = req.body.name || '';
-    if(name === ''){
-        res.render('admin/error',{
-            userInfo: req.userInfo,
-            message:'名称不能为空'
-        });
-        return;
-    }
-   
-    //数据库中是否已经存在同名分类名称
+router.post('/category/edit', function (req, res, next) {
+    var _id = req.query.id || '';
+    //获取post提交过来的名称
+    var name = req.body.name || '';
+
+    //获取需要修改的分类信息
     Category.findOne({
-        name:name
-    })
-    .then(function(rs){
-        if(rs){
-            //数据库中已经存在该分类了
-            res.render('admin/error',{
+        _id: _id
+    }).then(function (category) {
+
+        if (!category) {
+            res.render('admin/error', {
                 userInfo: req.userInfo,
-                message:'分类已经存在'
+                message: '分类信息不存在',
             })
-            return Promise.reject();//这一步Promise很经典啊
+            return Promise.reject();
+        }
+        else {
+            //当用户没有做任何修改提交的时候
+            if (name === category.name) {
+                res.render('admin/success', {
+                    userInfo: req.userInfo,
+                    message: '修改成功',
+                    url: '/admin/category'
+                })
+                return Promise.reject();
+            }
+            else {
+                //要修改的分类名称是否已经在数据库中存在
+                return Category.findOne({
+                    _id: { $ne: _id },
+                    name: name
+                })
+            }
+        }
+    })
+    .then(function(sameCategory){
+        //数据库当中已经有同名分类
+        if(sameCategory){
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '数据库中存在同名分类',
+            })
+            return Promise.reject();
         }
         else{
-            return new Category({
-                name:name,
-            }).save();
+           return Category.update({
+                _id:_id
+            },{
+                name:name
+            })
         }
-    }).then(function(newCategory){
-         //返回的promise，category
-        res.render('admin/success',{
+    })
+    .then(function(){
+        res.render('admin/success', {
             userInfo: req.userInfo,
-            message:'分类保存成功',
-            url:'/admin/category'
+            message: '修改成功',
+            url: '/admin/category'
         })
     })
+
+
+})
+
+/**
+ * 分类删除
+ */
+router.get('/category/delete', function (req, res, next) {
+
 })
 
 module.exports = router;
