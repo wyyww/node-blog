@@ -52,13 +52,12 @@ app.use(function(req,res,next){
   if(req.cookies.get("userInfo")){
     try{
       req.userInfo = JSON.parse(req.cookies.get("userInfo"));
-      console.log(req.userInfo)
+      // console.log(req.userInfo)
      
       //把判断管理员权限放在程序的入口位置，避免了后面处理都要判断权限的问题
        //获取是否为管理员
       User.findById(req.userInfo._id)
       .then(function(userInfo){
-     
        req.userInfo.isAdmin = Boolean(userInfo.isAdmin);
        // next();多出这个就有问题了
       })
