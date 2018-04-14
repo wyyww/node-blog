@@ -259,9 +259,6 @@ router.get('/category/delete', function (req, res, next) {
  * 内容首页
  */
 router.get('/content', function (req, res) {
-    // res.render('admin/content_index', {
-    //     userInfo: req.userInfo,
-    // })
     var page = Number(req.query.page || 1);
     var limit = 2;
     var pages = 0;
@@ -275,8 +272,8 @@ router.get('/content', function (req, res) {
         var skip = (page - 1) * limit;
 
         //populate用来两个数据库进行关联查询,可以从另外一个表读取数据
-        Content.find().sort({ _id: -1 }).limit(limit).skip(skip).populate('category').then(function (contents) {
-            // console.log(contents);
+        Content.find().sort({ _id: -1 }).limit(limit).skip(skip).populate(['category', 'user']).then(function (contents) {
+            //console.log(contents);
             res.render("admin/content_index", {
                 userInfo: req.userInfo,
                 contents: contents,
@@ -326,6 +323,7 @@ router.post('/content/add', function (req, res) {
         title: req.body.title,
         description: req.body.description,
         content: req.body.content,
+        user: req.userInfo._id.toString()
     }).save()
         .then(function (rs) {
             res.render('admin/success', {
@@ -409,18 +407,18 @@ router.post('/content/edit', function (req, res) {
 /**
  * 内容删除
  */
-router.get('/content/delete',function(req,res,next){
+router.get('/content/delete', function (req, res, next) {
     var _id = req.query.id || '';
 
     Content.remove({
-        _id:_id
+        _id: _id
     })
-    .then(function(){
-        res.render('admin/success',{
-            userInfo:req.userInfo,
-            message:'删除内容成功',
-            url:'/admin/content'
+        .then(function () {
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '删除内容成功',
+                url: '/admin/content'
+            })
         })
-    })
 })
 module.exports = router;
