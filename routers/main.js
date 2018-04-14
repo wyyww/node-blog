@@ -73,7 +73,6 @@ router.get('/', function (req, res, next) {
 
 })
 
-
 /**
  * 阅读全文
  */
@@ -86,6 +85,7 @@ router.get('/view', function (req, res) {
         //每次用户访问全文，则阅读数加1
         content.views++;
         content.save();
+        
         res.render('main/view',data);
     })
 })

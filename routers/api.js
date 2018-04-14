@@ -1,8 +1,8 @@
 let path = require('path');
 let fs = require('fs');
 let express = require('express');
-let User = require('../models/User.js')
-
+let User = require('../models/User.js');
+let Content = require('../models/Content');
 //用来监听URL为/api开头的请求
 var router = express.Router();
 
@@ -127,4 +127,32 @@ router.get('/user/logout',function(req,res,next){
     res.json(responseData);
     return;
 })
+
+
+/**
+ *评论提交
+ */
+
+ router.post('/comment/post',function(req,res,next){
+    
+     //当前文章的_id
+     let contentId = req.body.contentid || '';
+     let postData ={
+         username:req.userInfo.username,
+         postTime:new Date(),
+         content:req.body.content,
+     }
+
+     //查询当前文章的内容
+     Content.findOne({
+         _id:contentId
+     }).then(function(content){
+         content.comments.push(postData);
+         return content.save();
+     }).then(function(newContent){
+        responseData.message = '评论成功',
+        responseData.data=newContent;
+        res.json(responseData);
+     });
+ })
 module.exports = router;
