@@ -10,7 +10,7 @@ module.exports = new mongoose.Schema({
   //内容标题
   title:String,
 
-  //关联字段,分类的category
+  //关联字段,分类的关联
   category:{
     //类型
     type:mongoose.Schema.Types.ObjectId,

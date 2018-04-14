@@ -322,18 +322,105 @@ router.post('/content/add', function (req, res) {
     //保存到数据库
 
     new Content({
-        category:req.body.category,
-        title:req.body.title,
-        description:req.body.description,
-        content:req.body.content,
+        category: req.body.category,
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content,
     }).save()
-    .then(function(rs){
-        res.render('admin/success', {
+        .then(function (rs) {
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '内容保存成功',
+                url: '/admin/content'
+            })
+        })
+})
+
+
+/**
+ * 修改内容
+ */
+router.get('/content/edit', function (req, res) {
+    var _id = req.query.id || '';
+
+    var categories = [];
+    Category.find().sort({ _id: -1 }).then(function (rs) {
+        categories = rs;
+        return Content.findOne({
+            _id: _id
+        }).populate('category')
+    })
+        .then(function (content) {
+            if (!content) {
+                res.render('admin/error', {
+                    userInfo: req.userInfo,
+                    message: '指定内容不存在',
+                })
+                return Promise.reject();
+            }
+            else {
+                res.render('admin/content_edit', {
+                    userInfo: req.userInfo,
+                    content: content,
+                    categories: categories,
+                })
+            }
+        })
+})
+/**
+ * 内容添加保存
+ */
+router.post('/content/edit', function (req, res) {
+    // console.log(req.body);
+    var _id = req.query.id || '';
+
+    if (req.body.category === '') {
+        res.render('admin/error', {
             userInfo: req.userInfo,
-            message: '内容保存成功', 
+            message: '内容分类不能为空',
+        })
+        return;
+    }
+    if (req.body.title === '') {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '内容标题不能为空',
+        })
+        return;
+    }
+    //保存到数据库
+    Content.update({
+        _id: _id
+    }, {
+            category: req.body.category,
+            title: req.body.title,
+            description: req.body.description,
+            content: req.body.content,
+        })
+        .then(function (rs) {
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '内容保存成功',
+                url: '/admin/content'
+            })
+        })
+})
+
+/**
+ * 内容删除
+ */
+router.get('/content/delete',function(req,res,next){
+    var _id = req.query.id || '';
+
+    Content.remove({
+        _id:_id
+    })
+    .then(function(){
+        res.render('admin/success',{
+            userInfo:req.userInfo,
+            message:'删除内容成功',
             url:'/admin/content'
         })
     })
 })
-
 module.exports = router;
