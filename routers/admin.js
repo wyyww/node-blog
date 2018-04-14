@@ -260,7 +260,7 @@ router.get('/category/delete', function (req, res, next) {
  */
 router.get('/content', function (req, res) {
     var page = Number(req.query.page || 1);
-    var limit = 2;
+    var limit = 5;
     var pages = 0;
     Content.count().then(function (count) {
         //计算总页数
