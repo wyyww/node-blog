@@ -9,12 +9,13 @@ var mongoose = require('mongoose')
 module.exports = new mongoose.Schema({
   //内容标题
   title:String,
-  //关联字段,分类的is
+
+  //关联字段,分类的category
   category:{
     //类型
     type:mongoose.Schema.Types.ObjectId,
     //引用,另一张表的模型
-    ref:"Content"
+    ref:"Category"
   },
   //简介 
   description:{

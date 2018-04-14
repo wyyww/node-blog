@@ -274,7 +274,9 @@ router.get('/content', function (req, res) {
         page = Math.max(page, 1);
         var skip = (page - 1) * limit;
 
-        Content.find().sort({ _id: -1 }).limit(limit).skip(skip).then(function (contents) {
+        //populate用来两个数据库进行关联查询,可以从另外一个表读取数据
+        Content.find().sort({ _id: -1 }).limit(limit).skip(skip).populate('category').then(function (contents) {
+            // console.log(contents);
             res.render("admin/content_index", {
                 userInfo: req.userInfo,
                 contents: contents,
@@ -302,7 +304,7 @@ router.get('/content/add', function (req, res) {
  * 内容添加保存
  */
 router.post('/content/add', function (req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body.category === '') {
         res.render('admin/error', {
             userInfo: req.userInfo,
@@ -326,9 +328,10 @@ router.post('/content/add', function (req, res) {
         content:req.body.content,
     }).save()
     .then(function(rs){
-        res.render('admin/error', {
+        res.render('admin/success', {
             userInfo: req.userInfo,
             message: '内容保存成功', 
+            url:'/admin/content'
         })
     })
 })
