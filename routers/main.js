@@ -81,9 +81,11 @@ router.get('/view', function (req, res) {
     var contentId = req.query.contentid || '';
     Content.findOne({
         _id: contentId
-    }).then(function (contents) {
-        data.contents = contents;
-
+    }).then(function (content) {
+        data.contents = content;
+        //每次用户访问全文，则阅读数加1
+        content.views++;
+        content.save();
         res.render('main/view',data);
     })
 })
